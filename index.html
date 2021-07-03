@@ -62,7 +62,7 @@ function mapclub(){
     NProgress.start();
     for(let i = 0; i < parseInt(dataState.amount); i++){
             console.log("gass");
-            fetch('https://cors-anywhere.herokuapp.com/' + 'https://cmsapi.mapclub.com/api/signup-otp', {
+            fetch('https://cmsapi.mapclub.com/api/signup-otp', {
             method: 'POST',
             body: formData
             })
