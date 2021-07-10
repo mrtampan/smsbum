@@ -71,7 +71,7 @@ async function webhi(){
             console.log("gass");
             fetch('https://api.hi.com/chat/app/user/verifySmsCode', {
             method: 'POST',
-            body: dataJson
+            body: JSON.stringify(dataJson)
             })
             .then((response) => response.json())
             .then((result) => {
