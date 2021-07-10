@@ -19,6 +19,7 @@
     <select class="form-select mb-3" name="opsi" vy-input="optional" aria-label="Default select example">
         <option >Pilih server</option>
         <option  value="1">Mapcup (Send every 10 minute)</option>
+        <option  value="2">Api HI (Send every 20 minute)</option>
       </select>
     <div class="text-center"><button onClick="senderFunc()" class="btn btn-primary btn-lg"  >Submit</button></div>
 </div>
@@ -50,7 +51,37 @@ async function mapclub(){
                 console.error('Error:', error);
                 alert("Error");
             });
-            await timer(600000);
+            await timer(600000); // 10 menit
+    }
+    NProgress.done();
+    alert("sukses");
+}
+
+async function webhi(){
+
+    let phone = vyData.phone.substring(1);
+    let dataJson = {
+        "mobileNo" : '+62' + phone,
+        "bizId":"user",
+        "bizType":1
+
+    };
+    NProgress.start();
+    for(let i = 0; i < parseInt(vyData.amount); i++){
+            console.log("gass");
+            fetch('https://api.hi.com/chat/app/user/verifySmsCode', {
+            method: 'POST',
+            body: dataJson
+            })
+            .then((response) => response.json())
+            .then((result) => {
+                console.log(result);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert("Error");
+            });
+            await timer(1200000); // 20 menit
     }
     NProgress.done();
     alert("sukses");
@@ -77,6 +108,9 @@ function senderFunc(){
         mapclub();
     }  
   
+    if(vyData.optional == "2"){
+        webhi();
+    }  
 
 }
 
