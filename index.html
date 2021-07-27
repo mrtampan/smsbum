@@ -19,7 +19,7 @@
     <select class="form-select mb-3" name="opsi" vy-input="optional" aria-label="Default select example">
         <option >Pilih server</option>
         <option  value="1">Mapcup (Send every 1 minute)</option>
-        <option  value="2">Api HI (Send every 1 minute)</option>
+        <option  value="2">Api HI (Send every 5 second)</option>
       </select>
     <div class="text-center"><button onClick="senderFunc()" class="btn btn-primary btn-lg"  >Submit</button></div>
 </div>
@@ -85,7 +85,7 @@ async function webhi(){
                 console.error('Error:', error);
                 alert("Error");
             });
-            await timer(60000); // 1 menit
+            await timer(5000); // 1 menit
     }
     NProgress.done();
     alert("sukses");
